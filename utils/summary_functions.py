@@ -1,4 +1,3 @@
-import sys
 import spacy
 from spacy.lang.en.stop_words import STOP_WORDS
 from string import punctuation
@@ -11,11 +10,6 @@ from spacy.language import Language
 nlp = English()
 nlp.add_pipe('sentencizer') # updated
 parser = English()
-
-filename = sys.argv[-1]
-file = open(filename, 'rt')
-text = file.read()
-file.close()
 
 def pre_process(document):
     clean_tokens = [ token.lemma_.lower().strip() for token in document ]
@@ -50,15 +44,15 @@ def generate_summary(rank, text):
     summary = nlargest(rank, importance, key=importance.get)
     return summary
 
-def hello():
-    print("wagwan g")
+# def hello():
+#     print("wagwan g")
 
-num_sentences_to_generate = 3
-print("#############################")
-print("SUMMARY")
-print("#############################")
-print(generate_summary(num_sentences_to_generate, text))
-print("#############################")
-print("ORIGINAL")
-print("#############################")
-print(text)
+# num_sentences_to_generate = 3
+# print("#############################")
+# print("SUMMARY")
+# print("#############################")
+# print(generate_summary(num_sentences_to_generate, text))
+# print("#############################")
+# print("ORIGINAL")
+# print("#############################")
+# print(text)
