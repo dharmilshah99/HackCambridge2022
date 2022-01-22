@@ -19,7 +19,6 @@ DG_CLIENT = Deepgram({
 ###
 
 async def get_inference(audio_bytestream):
-    """Gets transcription of an audio byte stream."""
     source = {'buffer': audio_bytestream, 'mimetype': 'audio/wav'}
     response = await DG_CLIENT.transcription.prerecorded(source, {'punctuate': True})
     return response["results"]["channels"][0]["alternatives"][0]["transcript"]
@@ -38,7 +37,15 @@ def wordcloud_generator(audio_transcript):
 
 st.set_page_config(layout="centered", page_icon="💬", page_title="Audio Cloud")
 st.title("Audio Cloud")
-uploaded_file = st.file_uploader(label="Upload Audio Recording", )
+st.write("""
+         Gets transcription of an audio byte stream.
+         Add more description here at the end
+         """)
+uploaded_file = st.sidebar.file_uploader(label="Upload Audio Recording", )
+    
+analysis_mode = st.sidebar.selectbox('Analysis Mode', ('Lecture', 'Interview', 'IDK'))
+st.write(f"## {analysis_mode} Analysis")
+
 if uploaded_file is not None:
     audio_transcript = asyncio.run(get_inference(uploaded_file.getvalue()))
     wordcloud = wordcloud_generator(audio_transcript)
