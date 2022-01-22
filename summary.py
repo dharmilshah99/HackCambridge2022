@@ -51,4 +51,4 @@ def generate_summary(rank, text):
     return summary
 
 num_sentences_to_generate = 3
-print(generate_summary(num_sentences_to_generate, text)[0])
+print(generate_summary(num_sentences_to_generate, text))
