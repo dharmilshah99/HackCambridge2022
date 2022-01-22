@@ -32,3 +32,7 @@ st.title("Audio Cloud")
 uploaded_file = st.file_uploader(label="Upload Audio Recording", )
 if uploaded_file is not None:
     asyncio.run(get_inference(uploaded_file.getvalue()))
+add_selectbox = st.sidebar.selectbox(
+    "How would you like to be contacted?",
+    ("Email", "Home phone", "Mobile phone")
+)
