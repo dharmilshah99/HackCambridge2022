@@ -121,7 +121,7 @@ if input_mode == 'Upload a recording':
         col2.subheader("Sentiment Analysis")
         Blobject = TextBlob(audio_transcript)
         sentiment = Blobject.sentiment.polarity
-        if sentiment >= 0.5:
+        if sentiment >= 0:
             col2.write(f"{sentiment}: 😀") 
         else:
             col2.write(f"{sentiment}: ☹️")
