@@ -1,4 +1,3 @@
-from email.mime import audio
 import os
 import asyncio
 import streamlit as st
@@ -6,14 +5,12 @@ import streamlit.components.v1 as components
 from matplotlib import pyplot as plt
 from wordcloud import WordCloud
 from deepgram import Deepgram
+from textblob import TextBlob
 
 from config import *
 # For DeepAI
 import helper
 import requests_async as requests
-
-from textblob import TextBlob
-import sys
 
 ###
 # Global Variables
@@ -71,7 +68,6 @@ input_mode = st.sidebar.selectbox('Type of input file', ('Live recording', 'Uplo
 
 
 
-col1, col2 = st.columns(2)
 if input_mode == 'Live recording':
     
     with st.sidebar:
@@ -79,6 +75,7 @@ if input_mode == 'Live recording':
         transcript = real_time_speechbar("")
     
     if transcript is not (None or 0):
+        col1, col2 = st.columns(2)
         col1.subheader("WordCloud")
         wordcloud = helper.wordcloud_generator(transcript)
         fig = plt.figure(figsize = [2, 2])
@@ -100,13 +97,14 @@ if input_mode == 'Upload a recording':
         uploaded_file = st.file_uploader(label="Upload Audio Recording", )
 
     if uploaded_file is not None:
-        col1.subheader("WordCloud")
+        col1,col2,col3 = st.columns([1,3,1])
+        col2.subheader("WordCloud")
         audio_transcript = asyncio.run(get_inference(uploaded_file.getvalue()))
         wordcloud = helper.wordcloud_generator(audio_transcript)
-        fig = plt.figure()
+        fig = plt.figure(figsize=[2,2])
         plt.imshow(wordcloud)
         plt.axis("off")
-        col1.pyplot(fig)
+        col2.pyplot(fig)
         
         col2.subheader("Summary")
         num_sentences = col2.slider('Please select number of sentences', 1, 5)
@@ -114,24 +112,16 @@ if input_mode == 'Upload a recording':
         for sentence in summarised_text:
             col2.markdown(f"  -   {sentence}")
         
-        col1.subheader("Keywords Extraction")
-        num_keywords = col1.slider('Please select number of keywords', 1, 10)
+        col2.subheader("Keywords Extraction")
+        num_keywords = col2.slider('Please select number of keywords', 1, 10)
         keywords = helper.extract_keywords(audio_transcript)
         for i in range(num_keywords):
-<<<<<<< HEAD
-            col1.markdown(f"  -   {keywords[i]}")
+            col2.markdown(f"  -   {keywords[i]}")
             
-=======
-            if i >= num_keywords:
-                st.markdown(f"  -   {keywords[i]}")
-
-        st.subheader("Sentiment Analysis")
+        col2.subheader("Sentiment Analysis")
         Blobject = TextBlob(audio_transcript)
         sentiment = Blobject.sentiment.polarity
         if sentiment >= 0.5:
-            st.write(f"{sentiment}: 😀") 
+            col2.write(f"{sentiment}: 😀") 
         else:
-            st.write(f"{sentiment}: ☹️")
-
-
->>>>>>> sentiment-integrated
+            col2.write(f"{sentiment}: ☹️")

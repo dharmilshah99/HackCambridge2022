@@ -11,7 +11,7 @@ from wordcloud import WordCloud
 
 def wordcloud_generator(audio_transcript):
     """Generate wordcloud image."""
-    wordcloud_image = WordCloud(height=400, width=400,
+    wordcloud_image = WordCloud(height=2000, width=2000,
         background_color="white"
     ).generate(audio_transcript)
     print(wordcloud_image)
