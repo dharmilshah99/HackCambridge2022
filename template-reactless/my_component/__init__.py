@@ -75,10 +75,10 @@ if input_mode == 'Live recording':
         transcript = real_time_speechbar("")
     
     if transcript is not (None or 0):
-        col1, col2 = st.columns(2)
+        col1, col2 = st.columns([2, 1])
         col1.subheader("WordCloud")
         wordcloud = helper.wordcloud_generator(transcript)
-        fig = plt.figure(figsize = [2, 2])
+        fig = plt.figure()
         plt.imshow(wordcloud)
         plt.axis("off")
         col1.pyplot(fig)
