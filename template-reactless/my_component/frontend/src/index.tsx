@@ -24,7 +24,7 @@ button.onclick = function (): void {
     })
     const socket = new WebSocket('wss://api.deepgram.com/v1/listen', [
       'token',
-      '7e3ea4dfb0238df8ba87d72fc46ed37e19984beb',
+      'c599ae4208512c25a47d93f0cbb35747058e3714',
     ])
     socket.onopen = () => {
       console.log({ event: 'onopen' })
