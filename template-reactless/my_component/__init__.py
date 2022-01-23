@@ -1,3 +1,4 @@
+from email.mime import audio
 import os
 import asyncio
 import streamlit as st
@@ -10,6 +11,9 @@ from config import *
 # For DeepAI
 import helper
 import requests_async as requests
+
+from textblob import TextBlob
+import sys
 
 ###
 # Global Variables
@@ -114,5 +118,20 @@ if input_mode == 'Upload a recording':
         num_keywords = col1.slider('Please select number of keywords', 1, 10)
         keywords = helper.extract_keywords(audio_transcript)
         for i in range(num_keywords):
+<<<<<<< HEAD
             col1.markdown(f"  -   {keywords[i]}")
             
+=======
+            if i >= num_keywords:
+                st.markdown(f"  -   {keywords[i]}")
+
+        st.subheader("Sentiment Analysis")
+        Blobject = TextBlob(audio_transcript)
+        sentiment = Blobject.sentiment.polarity
+        if sentiment >= 0.5:
+            st.write(f"{sentiment}: 😀") 
+        else:
+            st.write(f"{sentiment}: ☹️")
+
+
+>>>>>>> sentiment-integrated
