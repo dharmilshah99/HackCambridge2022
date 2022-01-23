@@ -7,7 +7,9 @@ from wordcloud import WordCloud
 from deepgram import Deepgram
 
 from config import *
+# For DeepAI
 import helper
+import requests_async as requests
 
 ###
 # Global Variables
@@ -35,31 +37,54 @@ def real_time_speechbar(name, key=None):
     """Creates a real-time speechbar"""
     return _real_time_speechbar(name=name, key=key, default=0)
 
+async def gen_img(transcript):
+    transcript_split = transcript.split()
+    if len(transcript_split) >= 4:
+        sample = transcript_split[-4] + " " + transcript_split[-3] + " " + transcript_split[-2] + " " + transcript_split[-1]
+    else:
+        sample = transcript 
+    r = await requests.post(
+        "https://api.deepai.org/api/text2img",
+        data={
+            'text': sample,
+        },
+        headers={'api-key': '05fa4299-f2eb-407f-a55a-993bf7607693'})    
+    url=r.json()["output_url"]
+    st.image(url,width=600)
+    st.write(f"Caption: {sample}")
+    
 ###
 # Streamlit App
 ###
-st.set_page_config(layout="centered", page_icon="💬", page_title="Audio Cloud")
+st.set_page_config(layout="wide", page_icon="💬", page_title="Audio Cloud")
 
 st.title("Audio Cloud")
 st.write("""
         Gain insights to your speech!
         """)
 
-input_mode = st.selectbox('Type of input file', ('Live recording', 'Upload a recording'))
+input_mode = st.sidebar.selectbox('Type of input file', ('Live recording', 'Upload a recording'))
 
+
+
+col1, col2 = st.columns(2)
 if input_mode == 'Live recording':
     
     with st.sidebar:
         st.write("Requires access to your microphone")
         transcript = real_time_speechbar("")
-        
+    
     if transcript is not (None or 0):
-        st.subheader("WordCloud")
+        col1.subheader("WordCloud")
         wordcloud = helper.wordcloud_generator(transcript)
-        fig = plt.figure()
+        fig = plt.figure(figsize = [2, 2])
         plt.imshow(wordcloud)
         plt.axis("off")
-        st.pyplot(fig)
+        col1.pyplot(fig)
+        
+        col2.subheader("Image")
+        with col2:
+            asyncio.run(gen_img(transcript))
         
         st.subheader("Transcript")
         st.write(transcript)
@@ -71,22 +96,23 @@ if input_mode == 'Upload a recording':
         uploaded_file = st.file_uploader(label="Upload Audio Recording", )
 
     if uploaded_file is not None:
-        st.subheader("WordCloud")
+        col1.subheader("WordCloud")
         audio_transcript = asyncio.run(get_inference(uploaded_file.getvalue()))
         wordcloud = helper.wordcloud_generator(audio_transcript)
         fig = plt.figure()
         plt.imshow(wordcloud)
         plt.axis("off")
-        st.pyplot(fig)
+        col1.pyplot(fig)
         
-        st.subheader("Summary")
-        num_sentences = st.slider('Please select number of sentences', 1, 5)
+        col2.subheader("Summary")
+        num_sentences = col2.slider('Please select number of sentences', 1, 5)
         summarised_text = helper.generate_summary(num_sentences,audio_transcript)
         for sentence in summarised_text:
-            st.markdown(f"  -   {sentence}")
+            col2.markdown(f"  -   {sentence}")
         
-        st.subheader("Keywords Extraction")
+        col1.subheader("Keywords Extraction")
+        num_keywords = col1.slider('Please select number of keywords', 1, 10)
         keywords = helper.extract_keywords(audio_transcript)
-        num_keywords = st.slider('Please select number of keywords', 1, 10)
         for i in range(num_keywords):
-            st.markdown(f"  -   {keywords[i]}")
+            col1.markdown(f"  -   {keywords[i]}")
+            
