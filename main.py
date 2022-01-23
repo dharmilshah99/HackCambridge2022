@@ -36,15 +36,22 @@ def wordcloud_generator(audio_transcript):
 ###
 
 st.set_page_config(layout="centered", page_icon="💬", page_title="Audio Cloud")
-st.title("Audio Cloud")
-st.write("""
-         Gets transcription of an audio byte stream.
-         Add more description here at the end
-         """)
-uploaded_file = st.sidebar.file_uploader(label="Upload Audio Recording", )
+# st.title("Audio Cloud")
+# st.write("""
+#          Gets transcription of an audio byte stream.
+#          Add more description here at the end
+#          """)
+uploaded_file = st.sidebar.file_uploader(label="Upload Audio Recording 🔊", )
     
-analysis_mode = st.sidebar.selectbox('Analysis Mode', ('Lecture', 'Interview', 'IDK'))
-st.write(f"## {analysis_mode} Analysis")
+analysis_mode = st.sidebar.selectbox('Analysis Mode 🔎', ('Lecture', 'Interview', 'IDK'))
+st.title(f"{analysis_mode} Analysis")
+
+if analysis_mode == 'Lecture':
+    st.write("Produces a text summary of a university lecture from a given recording")
+elif analysis_mode == 'Interview':
+    st.write("Tool for practising interviews")
+elif analysis_mode == 'IDK':
+    st.write("IDK analysis innit")
 
 if uploaded_file is not None:
     audio_transcript = asyncio.run(get_inference(uploaded_file.getvalue()))
