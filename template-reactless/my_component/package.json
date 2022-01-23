@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@types/dom-mediacapture-record": "^1.0.11"
+  }
+}
