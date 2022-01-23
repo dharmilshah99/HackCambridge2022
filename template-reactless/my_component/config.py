@@ -1,0 +1,2 @@
+DEEPGRAM_API_KEY = "c599ae4208512c25a47d93f0cbb35747058e3714"
+DEEPGRAM_API_URL = 'https://api.deepgram.com/v1/'

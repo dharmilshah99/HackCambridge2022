@@ -1,0 +1,5 @@
+./template-reactless/nodes_modules/
+
+./template-reactless/my_component/frontend/nodes_modules/
+
+__pycache__/
