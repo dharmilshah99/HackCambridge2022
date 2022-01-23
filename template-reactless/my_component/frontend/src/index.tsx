@@ -5,12 +5,12 @@ import { Streamlit, RenderData } from "streamlit-component-lib"
 const span = document.body.appendChild(document.createElement("span"))
 const textNode = span.appendChild(document.createTextNode(""))
 const button = span.appendChild(document.createElement("button"))
-button.textContent = "Click Me!"
+button.textContent = "Start Recording"
 
 // Add a click handler to our button. It will send data back to Streamlit.
 let numClicks = 0
 let isFocused = false
-button.onclick = function(): void {
+button.onclick = function (): void {
   // Increment numClicks, and pass the new value back to
   // Streamlit via `Streamlit.setComponentValue`.
   // numClicks += 1
@@ -35,14 +35,14 @@ button.onclick = function(): void {
       })
       mediaRecorder.start(1000)
     }
-    
+
     let liveFeed = ''
     socket.onmessage = (message) => {
       const received = JSON.parse(message.data)
       const transcript = received.channel.alternatives[0].transcript
       if (transcript && received.is_final) {
         console.log(transcript)
-        liveFeed+=
+        liveFeed +=
           transcript + ' '
         Streamlit.setComponentValue(liveFeed)
       }
@@ -58,11 +58,11 @@ button.onclick = function(): void {
   })
 }
 
-button.onfocus = function(): void {
+button.onfocus = function (): void {
   isFocused = true
 }
 
-button.onblur = function(): void {
+button.onblur = function (): void {
   isFocused = false
 }
 
@@ -80,28 +80,14 @@ function onRender(event: Event): void {
   if (data.theme) {
     // Use CSS vars to style our button border. Alternatively, the theme style
     // is defined in the data.theme object.
-    const borderStyling = `1px solid var(${
-      isFocused ? "--primary-color" : "gray"
-    })`
+    const borderStyling = `1px solid var(${isFocused ? "--primary-color" : "gray"
+      })`
     button.style.border = borderStyling
     button.style.outline = borderStyling
   }
 
   // Disable our button if necessary.
   button.disabled = data.disabled
-
-  // RenderData.args is the JSON dictionary of arguments sent from the
-  // Python script.
-  let name = data.args["name"]
-
-  // Show "Hello, name!" with a non-breaking space afterwards.
-  textNode.textContent = `Hello, ${name}! ` + String.fromCharCode(160)
-
-  // We tell Streamlit to update our frameHeight after each render event, in
-  // case it has changed. (This isn't strictly necessary for the example
-  // because our height stays fixed, but this is a low-cost function, so
-  // there's no harm in doing it redundantly.)
-  Streamlit.setFrameHeight()
 }
 
 // Attach our `onRender` handler to Streamlit's render event.
